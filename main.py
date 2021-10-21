@@ -22,19 +22,34 @@ def print_start_pole():
     print(" "*30, "-"*3, pole_[6]," "*1, pole_[7]," "*1, pole_[8],"-"*3)
     print(" "*30, "-" * 17, "\n")
 
+# Функция выводит игровое поле в процессе игры, не меняя никаких значений
 def print_game_pole():
 
-#    pole_ = list(range(1,10))
     print(" "*30, "-" * 17)
     print(" "*30, "-"*3, pole_global[0]," "*1, pole_global[1]," "*1, pole_global[2],"-"*3)
     print(" "*30, "-"*3, pole_global[3]," "*1, pole_global[4]," "*1, pole_global[5],"-"*3)
     print(" "*30, "-"*3, pole_global[6]," "*1, pole_global[7]," "*1, pole_global[8],"-"*3)
     print(" "*30, "-" * 17, "\n")
 
-# Функция проверяет комбинации выигрыша
-def who_winner(a):
+#Функция проверяет введенное число
+def number_correct():
 
-    if a == 'X':
+    while True:
+        try:
+            number_input = int(input("Введите номер ячейки, где будет поставлен СИМВОЛ: "))
+            if number_input not in range(1, 10):
+                print("Введен не корректный номер ячейки! Попробуйте снова! \n")
+            else:                                                                   # Вопрос как лучше через break
+                break                                                               # или тут return number_input
+        except ValueError:
+            print("Введен символ, а не номер ячейки. Попробуйте снова! \n")
+
+    return number_input
+
+# Функция проверяет комбинации выигрыша
+def who_winner(winner1):
+
+    if winner1 == 'X':
         if (pole_global[0] == pole_global[1] == pole_global[2] == 'X') or (         #Проверка горизонталей
             pole_global[3] == pole_global[4] == pole_global[5] == 'X') or (
             pole_global[6] == pole_global[7] == pole_global[8] == 'X') or (
@@ -44,65 +59,56 @@ def who_winner(a):
             pole_global[0] == pole_global[4] == pole_global[8] == 'X') or (         #Проверка диагоналей
             pole_global[2] == pole_global[4] == pole_global[6] == 'X'):
 
-            return a
+            return winner1
 
-    elif a == 'A':
-        if (pole_global[0] == pole_global[1] == pole_global[2] == 'A') or (         #Проверка горизонталей
-            pole_global[3] == pole_global[4] == pole_global[5] == 'A') or (
-            pole_global[6] == pole_global[7] == pole_global[8] == 'A') or (
-            pole_global[0] == pole_global[3] == pole_global[6] == 'A') or (         #Проверка вертикалей
-            pole_global[1] == pole_global[4] == pole_global[7] == 'A') or (
-            pole_global[2] == pole_global[5] == pole_global[8] == 'A') or (
-            pole_global[0] == pole_global[4] == pole_global[8] == 'A') or (         #Проверка диагоналей
-            pole_global[2] == pole_global[4] == pole_global[6] == 'A'):
+    elif winner1 == 'O':
+        if (pole_global[0] == pole_global[1] == pole_global[2] == 'O') or (         #Проверка горизонталей
+            pole_global[3] == pole_global[4] == pole_global[5] == 'O') or (
+            pole_global[6] == pole_global[7] == pole_global[8] == 'O') or (
+            pole_global[0] == pole_global[3] == pole_global[6] == 'O') or (         #Проверка вертикалей
+            pole_global[1] == pole_global[4] == pole_global[7] == 'O') or (
+            pole_global[2] == pole_global[5] == pole_global[8] == 'O') or (
+            pole_global[0] == pole_global[4] == pole_global[8] == 'O') or (         #Проверка диагоналей
+            pole_global[2] == pole_global[4] == pole_global[6] == 'O'):
 
-            return a
+            return winner1
 
+print_instruction()
 pole_global = list(range(1,10))  #Глобальное поле
-print(pole_global)
 print_start_pole()
 
 for index in range(len(pole_global)):
-    if index % 2 == 0:  #ход игрока №1 (нечетные ходы)
-        # !!! Тут надо как-то завернуть все это дело в функцию
-        first_gamer = int(input("Игрок №1 введите номер поля, где будет поставлен Х: "))
-        if 1 <= first_gamer <= 9:                           # Проверяем что число соответствует номеру ячейки
-            if pole_global[first_gamer-1] == first_gamer:   # Если ячейка не занята
-                pole_global[first_gamer-1] = 'X'            # Записываем значение в ячейку
-                c = who_winner('X')                                            # Проверяем условие выигрыша
-                if c == 'X':
-                    print("Вы победили")
-                    print(pole_global)
-                    print_game_pole()
-                    break
-                else:
-                    print("Продолжаем игру")
-                    print(pole_global)
-                    print_game_pole()
+    if index % 2 == 0:                                  # Ход игрока №1 (нечетные ходы)
+        first_gamer = number_correct()                  # Проверка введенного значения
+        #Тут ввести функцию проверки ячейки на занятость (или отдельная или в исключения или как исключения)
+        if pole_global[first_gamer-1] == first_gamer:   # Если ячейка не занята
+            pole_global[first_gamer-1] = 'X'            # Записываем значение в ячейку
+            win1 = who_winner('X')                      # Проверяем условие выигрыша
+            if win1 == 'X':
+                print("*** Поздравляем. Вы победили *** \n")
+                print_game_pole()
+                break
             else:
-                print("Поле уже занято, введите другой номер поля")
+                print("Победитель не выявлен. Продолжаем игру \n \n")
+                print_game_pole()
         else:
-            print("Вы ввели неверный номер поля, будьте внимательнее и повторите ход!")
-    else:
-        second_gamer = int(input("Игрок №2 введите номер поля, где будет поставлен O: "))
-        if 1 <= second_gamer <= 9:  # Проверяем что число соответствует номеру ячейки
-            if pole_global[second_gamer - 1] == second_gamer:
-                pole_global[second_gamer - 1] = 'A'
-                c1 = who_winner('A')  # Проверяем условие выигрыша
-                if c1 == 'A':
-                    print("Вы победили")
-                    print(pole_global)
-                    print_game_pole()
-                    break
-                else:
-                    print("Продолжаем игру")
-                    print(pole_global)
-                    print_game_pole()
+            print("Поле уже занято, введите другой номер поля \n \n")
+
+    else:                                                      # Ход игрока №1 (нечетные ходы)
+        second_gamer = number_correct()                        # Проверка введенного значения
+        if pole_global[second_gamer - 1] == second_gamer:      # Если ячейка не занята
+            pole_global[second_gamer - 1] = 'O'                # Записываем значение в ячейку
+            win2 = who_winner('O')                             # Проверяем условие выигрыша
+            if win2 == 'O':
+                print("*** Поздравляем. Вы победили *** \n")
+                print_game_pole()
+                break
             else:
-                print("Поле уже занято, введите другой номер поля")
+                print("Победитель не выявлен. Продолжаем игру \n \n")
+                print_game_pole()
         else:
-            print("Вы ввели неверный номер поля, будьте внимательнее и повторите ход!")
+            print("Поле уже занято, введите другой номер поля \n \n")
 
-#       Игра
 
-#print_instruction()
+# Сделать функцию проверки ячейки на занятость
+# В комментах ввести номер игрока и чем он ходит
